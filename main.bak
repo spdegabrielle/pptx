@@ -77,8 +77,8 @@
 
 ;; ---- Media ----
 ;; We'll embed the Persian carpet as "carpet.jpg" (or png) and the cat as "tabby.png"
-(define carpet-ext (path-get-extension CARPET_PATH))
-(define carpet-name (format "carpet.~a" (if carpet-ext (path-get-extension CARPET_PATH) "jpg")))
+(define carpet-ext (path-extension CARPET_PATH))
+(define carpet-name (format "carpet.~a" (if carpet-ext (path-extension CARPET_PATH) "jpg")))
 (define cat-name    "tabby.png")
 
 (copy-into CARPET_PATH carpet-name)
@@ -508,18 +508,11 @@
 ;; ---- Zip into .pptx ----
 ;; Racket's `zip` packs files into a ZIP; a .pptx is just that ZIP with this structure.
 ;; (It zips paths relative to current directory.)
-
-;; Walk `base` and return a list of paths that are relative to `base`.
 (define (collect-relative-paths base)
-  (define base-simpl (simple-form-path base))
+  ;; walk directory, return list of relative paths
   (for/list ([p (in-directory base)])
-    (define p-simpl (simple-form-path p))
-    ;; find-relative-path returns a path relative to base if possible
-    (define rel (find-relative-path base-simpl p-simpl))
-    ;; We still run simplify-path for cleanliness, and convert to a
-    ;; string path when zipping (zip accepts path-strings fine).
-    (path->string (simplify-path rel))))
-
+    (define rel (simplify-path (path-replace-prefix p base "")))
+    rel))
 
 ;; Move into WORK so the archive contains the correct paths (no absolute prefixes)
 (parameterize ([current-directory WORK])
