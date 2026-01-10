@@ -1,4 +1,4 @@
-racket-package
+pptx racket-package
 ==============
 
 This is a template repository for GitHub that guides you through creating a new package using github and the `raco pkg new` command.
