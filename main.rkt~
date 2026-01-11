@@ -24,7 +24,7 @@
 
 ;; ---- USER: set these to your local files ----
 (define CARPET_PATH (build-path (current-directory) "carpet.jpg")) ; or .png
-(define CAT_PATH     (build-path (current-directory) "tabby.jpg"))
+(define CAT_PATH     (build-path (current-directory) "tabby.png"))
 
 (unless (file-exists? CARPET_PATH)
   (error 'setup "Persian carpet image not found at ~a" CARPET_PATH))
@@ -72,14 +72,14 @@
 
 (define (copy-into from to-name)
   (define dest (build-path media to-name))
-  (copy-file from dest #:exists-ok? 'replace)
+  (copy-file from dest #:exists 'replace)
   to-name)
 
 ;; ---- Media ----
 ;; We'll embed the Persian carpet as "carpet.jpg" (or png) and the cat as "tabby.png"
 (define carpet-ext (path-get-extension CARPET_PATH))
-(define carpet-name "carpet.jpg");(format "carpet.~a" (if carpet-ext (path-get-extension CARPET_PATH) "jpg")))
-(define cat-name    "tabby.jpg")
+(define carpet-name (format "carpet.~a" (if carpet-ext (path-get-extension CARPET_PATH) "jpg")))
+(define cat-name    "tabby.png")
 
 (copy-into CARPET_PATH carpet-name)
 (copy-into CAT_PATH    cat-name)
@@ -446,7 +446,7 @@
         "                  </p:anim>\n"
         "                </p:cTn>\n"
         "              </p:par>\n")
-       (+ 10 i) i i i))
+       (+ 10 i) i i))
     "")
    "            </p:childTnLst>\n"
    "          </p:seq>\n"
@@ -516,8 +516,6 @@
     (define p-simpl (simple-form-path p))
     ;; find-relative-path returns a path relative to base if possible
     (define rel (find-relative-path base-simpl p-simpl))
-    (printf "~a -> ~a ~n" p rel ) ; " -> "
-    (printf "~a -> ~a ~n" (path-string? rel) rel ) ; " -> "
     ;; We still run simplify-path for cleanliness, and convert to a
     ;; string path when zipping (zip accepts path-strings fine).
     (path->string (simplify-path rel))))
